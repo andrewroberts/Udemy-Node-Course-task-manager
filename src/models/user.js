@@ -11,7 +11,6 @@ const User = mongoose.model('User', {
         type: String,
         required: true,
         trim: true,
-        minLength: 7,
         validate(value) {
             if (value.length < 7) {
                 throw new Error('The password must be 7 chars or longer')
