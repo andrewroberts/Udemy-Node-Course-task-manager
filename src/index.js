@@ -1,4 +1,11 @@
 
+/*
+
+NOTES: Cannot create, login and then get profile. My Postman is different to Andrews
+
+*/
+
+
 const express = require('express')
 require('./db/mongoose.js')
 
@@ -17,14 +24,15 @@ app.listen(port, () => {
     console.log('Server is up on port ' + port) 
 })
 
-const jwt = require('jsonwebtoken')
+// const bcryptjs = require('bcryptjs')
 
-const myFunction = () => {
-    const token = jwt.sign({_id: 'abcde'}, 'thisisatoken')
-    console.log(token)
+// const myFunction = async () => {
+//     const password = 'red12345!'
+//     // const encoded = '$2a$08$gpMzekr2rrWRBm9hb5X/qOQIVoon0mwcgDI2TehWb73j7d2hy1y1O'
+//     // const isMatch = await bcryptjs.compare(password, encoded)
+//     const encoded = await bcryptjs.hash(password, 8)
+//     console.log(encoded)
+//     // console.log(isMatch)
+// }
 
-    const id = jwt.verify(token, 'thisisatokenn')
-    console.log(id)
-}
-
-myFunction()
+// myFunction()

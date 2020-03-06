@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcryptjs = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -42,8 +43,24 @@ const userSchema = new mongoose.Schema({
                 throw new Error('Age must be a positive number')
             }
         }
-    }
+    },
+    tokens: [{
+        token:{
+            type: String,
+            required: true
+        }
+    }]
 })
+
+userSchema.methods.generateAuthToken = async function() {
+    const user = this
+    const token = jwt.sign({_id: user._id.toString()}, 'thisismytoken')
+
+    user.tokens = user.tokens.concat({token})
+    await user.save()
+
+    return token
+}
 
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email})
@@ -54,6 +71,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
     try {
 
+        console.log('password:' + password + ', user.password:' + user.password)
         const isMatch = await bcryptjs.compare(password, user.password)
 
         if (!isMatch) {
@@ -62,7 +80,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
     } catch (error) {
 
-        throw new Error('Internal error')
+        throw new Error('Internal error: findByCredentials()')
     }
 
     return user
